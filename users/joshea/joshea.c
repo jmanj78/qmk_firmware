@@ -1,4 +1,25 @@
+#include QMK_KEYBOARD_H
 #include "joshea.h"
+
+// Send ; on first tap, End+; on second tap
+void scl_endscl(qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count % 2 == 0) {
+    tap_code(KC_END);
+    tap_code(KC_SCLN);
+  } else {
+    tap_code(KC_SCLN);
+  }
+};
+
+void mute_nvda(qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count % 2 == 0) {
+    tap_code16(NVDA_EXIT);
+  } else {
+    tap_code(KC_MUTE);
+  }
+};
+
+qk_tap_dance_action_t tap_dance_actions[] = {[SCL_ENDSCL] = ACTION_TAP_DANCE_FN(scl_endscl), [MUTE_NVDA] = ACTION_TAP_DANCE_FN(mute_nvda)};
 
 __attribute__ ((weak))
 bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
